@@ -1,0 +1,6 @@
+{
+  "name": "Food Chain Quest: Primary Science Mastery Games",
+  "description": "Interactive primary science mastery games exploring how organisms obtain energy, producers vs consumers, predator vs prey, food chain construction, and ecosystem balance ripples.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
