@@ -3,6 +3,11 @@ import { ArrowRight, Sparkles, BookOpen, CheckCircle2, Award, Play } from 'lucid
 import { useProgress } from '../context/ProgressContext';
 import { LEARNING_OBJECTIVES } from '../data/curriculumData';
 
+import ecoProducersImg from '../assets/images/eco_producers_consumers_1791353923473.jpg';
+import ecoPredatorPreyImg from '../assets/images/eco_predator_prey_1791353936456.jpg';
+import ecoFoodChainImg from '../assets/images/eco_food_chain_builder_1791353947454.jpg';
+import ecoBalanceImg from '../assets/images/eco_balance_ripple_1791353961096.jpg';
+
 interface HomeOverviewProps {
   onSelectGame: (gameId: 'game1' | 'game2' | 'game3' | 'game4' | 'curriculum') => void;
   onOpenPassport: () => void;
@@ -18,7 +23,8 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({ onSelectGame, onOpen
       subtitle: 'Producers vs Consumers',
       objectivesCovered: 'Objectives 1, 2 & 3',
       description: 'Explore the Solar Kitchen of photosynthesis! Learn how producers make their own food and why consumers must eat other organisms.',
-      image: '/src/assets/images/eco_producers_consumers_1791353923473.jpg',
+      image: ecoProducersImg,
+      fallbackImage: '/images/eco_producers_consumers_1791353923473.jpg',
       badge: 'Solar Chef',
       stars: progress.game1.stars,
       color: 'emerald',
@@ -29,7 +35,8 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({ onSelectGame, onOpen
       subtitle: 'Predator vs Prey',
       objectivesCovered: 'Objective 4 (and 1)',
       description: 'Investigate savannah, pond, ocean, and forest cases! Spot hunters, prey, and discover creatures that play both vital roles.',
-      image: '/src/assets/images/eco_predator_prey_1791353936456.jpg',
+      image: ecoPredatorPreyImg,
+      fallbackImage: '/images/eco_predator_prey_1791353936456.jpg',
       badge: 'Savannah Sleuth',
       stars: progress.game2.stars,
       color: 'rose',
@@ -40,7 +47,8 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({ onSelectGame, onOpen
       subtitle: 'Build the Food Chain',
       objectivesCovered: 'Objectives 5 & 6',
       description: 'Master the Arrow of Energy! Construct real food chains across 4 biomes and solve the broken link mystery.',
-      image: '/src/assets/images/eco_food_chain_builder_1791353947454.jpg',
+      image: ecoFoodChainImg,
+      fallbackImage: '/images/eco_food_chain_builder_1791353947454.jpg',
       badge: 'Master Crafter',
       stars: progress.game3.stars,
       color: 'sky',
@@ -51,7 +59,8 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({ onSelectGame, onOpen
       subtitle: 'The Ripple Effect',
       objectivesCovered: 'Objective 7',
       description: 'Simulate environmental shocks! See how droughts and predator shifts cause chain reactions through the whole ecosystem.',
-      image: '/src/assets/images/eco_balance_ripple_1791353961096.jpg',
+      image: ecoBalanceImg,
+      fallbackImage: '/images/eco_balance_ripple_1791353961096.jpg',
       badge: 'Eco Guardian',
       stars: progress.game4.stars,
       color: 'amber',
@@ -139,11 +148,14 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({ onSelectGame, onOpen
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   onError={(e) => {
-                    // Fallback container if image cannot be rendered
                     const target = e.currentTarget;
-                    target.style.display = 'none';
-                    if (target.parentElement) {
-                      target.parentElement.classList.add('bg-emerald-800');
+                    if (target.src !== game.fallbackImage && !target.src.endsWith(game.fallbackImage)) {
+                      target.src = game.fallbackImage;
+                    } else {
+                      target.style.display = 'none';
+                      if (target.parentElement) {
+                        target.parentElement.classList.add('bg-emerald-800');
+                      }
                     }
                   }}
                 />
