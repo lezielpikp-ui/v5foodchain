@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
-import { Sparkles, Sun, Droplets, Wind, RotateCcw, Volume2, ArrowRight } from 'lucide-react';
+import { Sparkles, Sun, Droplets, Wind, RotateCcw, Volume2, ArrowRight, Shuffle } from 'lucide-react';
 import { ORGANISMS_GAME1, OrganismCard } from '../../data/curriculumData';
 import { useProgress } from '../../context/ProgressContext';
 import { soundManager } from '../../utils/audio';
+
+const shuffleCards = (cards: OrganismCard[]) => {
+  const shuffled = [...cards];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
 
 export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }> = ({ onCompleteGame }) => {
   const { recordGameResult, progress } = useProgress();
@@ -17,7 +26,7 @@ export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }
   const isPhotosynthesisComplete = sunlightAdded && waterAdded && co2Added;
 
   // --- Stage 2 State: Producer vs Consumer Sorter ---
-  const [unplacedCards, setUnplacedCards] = useState<OrganismCard[]>(ORGANISMS_GAME1);
+  const [unplacedCards, setUnplacedCards] = useState<OrganismCard[]>(() => shuffleCards(ORGANISMS_GAME1));
   const [placedProducers, setPlacedProducers] = useState<OrganismCard[]>([]);
   const [placedConsumers, setPlacedConsumers] = useState<OrganismCard[]>([]);
   const [sortFeedback, setSortFeedback] = useState<{ message: string; isCorrect: boolean } | null>(null);
@@ -109,12 +118,20 @@ export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }
     }
   };
 
+  const handleShuffleAndResetSorter = () => {
+    soundManager.playClick();
+    setUnplacedCards(shuffleCards(ORGANISMS_GAME1));
+    setPlacedProducers([]);
+    setPlacedConsumers([]);
+    setSortFeedback(null);
+  };
+
   const handleResetGame1 = () => {
     setStage(1);
     setSunlightAdded(false);
     setWaterAdded(false);
     setCo2Added(false);
-    setUnplacedCards(ORGANISMS_GAME1);
+    setUnplacedCards(shuffleCards(ORGANISMS_GAME1));
     setPlacedProducers([]);
     setPlacedConsumers([]);
     setSortFeedback(null);
@@ -334,8 +351,18 @@ export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }
                 </p>
               </div>
 
-              <div className="text-xs font-semibold text-slate-500">
-                Remaining to sort: <span className="tabular-nums font-bold text-slate-800">{unplacedCards.length}</span> / 8
+              <div className="flex items-center gap-2.5">
+                <div className="text-xs font-semibold text-slate-500">
+                  Remaining to sort: <span className="tabular-nums font-bold text-slate-800">{unplacedCards.length}</span> / 8
+                </div>
+                <button
+                  onClick={handleShuffleAndResetSorter}
+                  title="Shuffle deck into a new random order"
+                  className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 hover:text-slate-900 rounded-lg transition-colors border border-slate-200"
+                >
+                  <Shuffle className="w-3.5 h-3.5 text-slate-600" />
+                  <span>Shuffle</span>
+                </button>
               </div>
             </div>
 
@@ -375,13 +402,22 @@ export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }
                 <p className="text-xs text-emerald-800 max-w-md mx-auto">
                   You proved that plants like Oak Trees, Sunflowers, and Phytoplankton are producers, while animals are consumers!
                 </p>
-                <button
-                  onClick={() => setStage(3)}
-                  className="px-5 py-2.5 bg-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-emerald-800 transition-colors inline-flex items-center gap-2"
-                >
-                  <span>Proceed to Consumer Diets</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                <div className="flex items-center justify-center gap-3 pt-1 flex-wrap">
+                  <button
+                    onClick={handleShuffleAndResetSorter}
+                    className="px-4 py-2.5 bg-white border border-emerald-300 text-emerald-800 font-bold text-xs sm:text-sm rounded-xl hover:bg-emerald-100/50 transition-colors inline-flex items-center gap-2 shadow-2xs"
+                  >
+                    <Shuffle className="w-4 h-4 text-emerald-700" />
+                    <span>Shuffle & Sort Again</span>
+                  </button>
+                  <button
+                    onClick={() => setStage(3)}
+                    className="px-5 py-2.5 bg-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-emerald-800 transition-colors inline-flex items-center gap-2 shadow-xs"
+                  >
+                    <span>Proceed to Consumer Diets</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             )}
 
