@@ -88,24 +88,6 @@ export interface OrganismCard {
 
 export const ORGANISMS_GAME1: OrganismCard[] = [
   {
-    id: 'oak-tree',
-    name: 'Oak Tree',
-    category: 'producer',
-    emoji: '🌳',
-    energySource: 'Sunlight (Photosynthesis)',
-    funFact: 'An oak tree can produce thousands of acorns every autumn using solar energy!',
-    scientificDetail: 'Uses chlorophyll in its leaves to trap solar energy and synthesize glucose from CO2 and water.'
-  },
-  {
-    id: 'phytoplankton',
-    name: 'Phytoplankton',
-    category: 'producer',
-    emoji: '🔬',
-    energySource: 'Sunlight in Ocean Waters',
-    funFact: 'These tiny floating ocean plants make over half of the oxygen on Earth!',
-    scientificDetail: 'Microscopic marine producers that form the foundation of almost all ocean food webs.'
-  },
-  {
     id: 'sunflower',
     name: 'Sunflower',
     category: 'producer',
@@ -113,15 +95,6 @@ export const ORGANISMS_GAME1: OrganismCard[] = [
     energySource: 'Sunlight (Photosynthesis)',
     funFact: 'Young sunflowers track the sun across the sky every single day!',
     scientificDetail: 'Green leaves take in water from roots and carbon dioxide from air to create plant food.'
-  },
-  {
-    id: 'clover-grass',
-    name: 'Meadow Grass',
-    category: 'producer',
-    emoji: '🌾',
-    energySource: 'Sunlight (Photosynthesis)',
-    funFact: 'Grass grows from the base, which allows it to survive being nibbled by herbivores!',
-    scientificDetail: 'Captures photons from sunlight to power the chemical reaction of food making.'
   },
   {
     id: 'caterpillar',
@@ -134,14 +107,32 @@ export const ORGANISMS_GAME1: OrganismCard[] = [
     scientificDetail: 'Primary consumer (herbivore) that directly digests producer biomass for energy.'
   },
   {
-    id: 'cottontail-rabbit',
-    name: 'Cottontail Rabbit',
+    id: 'oak-tree',
+    name: 'Oak Tree',
+    category: 'producer',
+    emoji: '🌳',
+    energySource: 'Sunlight (Photosynthesis)',
+    funFact: 'An oak tree can produce thousands of acorns every autumn using solar energy!',
+    scientificDetail: 'Uses chlorophyll in its leaves to trap solar energy and synthesize glucose from CO2 and water.'
+  },
+  {
+    id: 'red-tailed-hawk',
+    name: 'Red-Tailed Hawk',
     category: 'consumer',
-    dietType: 'herbivore',
-    emoji: '🐇',
-    energySource: 'Eats grasses, clovers, and bark',
-    funFact: 'Rabbits have big ears that rotate 270 degrees to listen for approaching predators!',
-    scientificDetail: 'Herbivorous consumer that relies exclusively on plant material for sugars and fiber.'
+    dietType: 'carnivore',
+    emoji: '🦅',
+    energySource: 'Eats mice, snakes, and small birds',
+    funFact: 'Hawks have eyesight roughly 8 times sharper than human eyesight!',
+    scientificDetail: 'Carnivorous secondary/tertiary consumer that hunts other living animals for proteins and fats.'
+  },
+  {
+    id: 'clover-grass',
+    name: 'Meadow Grass',
+    category: 'producer',
+    emoji: '🌾',
+    energySource: 'Sunlight (Photosynthesis)',
+    funFact: 'Grass grows from the base, which allows it to survive being nibbled by herbivores!',
+    scientificDetail: 'Captures photons from sunlight to power the chemical reaction of food making.'
   },
   {
     id: 'brown-bear',
@@ -154,14 +145,23 @@ export const ORGANISMS_GAME1: OrganismCard[] = [
     scientificDetail: 'Omnivorous consumer capable of deriving nutritional energy from both plant and animal tissues.'
   },
   {
-    id: 'red-tailed-hawk',
-    name: 'Red-Tailed Hawk',
+    id: 'phytoplankton',
+    name: 'Phytoplankton',
+    category: 'producer',
+    emoji: '🔬',
+    energySource: 'Sunlight in Ocean Waters',
+    funFact: 'These tiny floating ocean plants make over half of the oxygen on Earth!',
+    scientificDetail: 'Microscopic marine producers that form the foundation of almost all ocean food webs.'
+  },
+  {
+    id: 'cottontail-rabbit',
+    name: 'Cottontail Rabbit',
     category: 'consumer',
-    dietType: 'carnivore',
-    emoji: '🦅',
-    energySource: 'Eats mice, snakes, and small birds',
-    funFact: 'Hawks have eyesight roughly 8 times sharper than human eyesight!',
-    scientificDetail: 'Carnivorous secondary/tertiary consumer that hunts other living animals for proteins and fats.'
+    dietType: 'herbivore',
+    emoji: '🐇',
+    energySource: 'Eats grasses, clovers, and bark',
+    funFact: 'Rabbits have big ears that rotate 270 degrees to listen for approaching predators!',
+    scientificDetail: 'Herbivorous consumer that relies exclusively on plant material for sugars and fiber.'
   },
 ];
 
@@ -549,6 +549,14 @@ export interface EcoCrisisScenario {
   badge: string;
   story: string;
   shockEvent: string;
+  labels?: {
+    producer: string;
+    producerEmoji: string;
+    herbivore: string;
+    herbivoreEmoji: string;
+    predator: string;
+    predatorEmoji: string;
+  };
   initialCounts: {
     grass: number;
     rabbits: number;
@@ -573,8 +581,16 @@ export const CRISIS_SCENARIOS_GAME4: EcoCrisisScenario[] = [
     id: 'drought',
     title: 'The Great Summer Drought',
     badge: 'Producers Affected',
-    story: 'No rain has fallen for three months! The hot sun bakes the soil, causing 75% of the green grass to wither and turn brown.',
+    story: 'No rain has fallen for three months! The scorching sun bakes the soil, causing 75% of the green meadow grass to wither and turn brown.',
     shockEvent: 'Grass Producer Drop (-75%)',
+    labels: {
+      producer: 'Meadow Grass',
+      producerEmoji: '🌾',
+      herbivore: 'Meadow Rabbits',
+      herbivoreEmoji: '🐇',
+      predator: 'Red Foxes',
+      predatorEmoji: '🦊'
+    },
     initialCounts: { grass: 100, rabbits: 50, foxes: 10 },
     afterCounts: { grass: 25, rabbits: 15, foxes: 3 },
     inquiryQuestion: 'What will happen to the Rabbits and Foxes when the Grass withers away?',
@@ -603,6 +619,14 @@ export const CRISIS_SCENARIOS_GAME4: EcoCrisisScenario[] = [
     badge: 'Top Consumer Disruption',
     story: 'Due to illegal hunting, all the foxes in the meadow are removed. Suddenly, there are no predators hunting the rabbits!',
     shockEvent: 'Foxes Removed (0%)',
+    labels: {
+      producer: 'Meadow Clover',
+      producerEmoji: '🍀',
+      herbivore: 'Cottontail Rabbits',
+      herbivoreEmoji: '🐇',
+      predator: 'Red Foxes',
+      predatorEmoji: '🦊'
+    },
     initialCounts: { grass: 100, rabbits: 40, foxes: 10 },
     afterCounts: { grass: 10, rabbits: 120, foxes: 0 },
     inquiryQuestion: 'What happens immediately to the Rabbit population and the Meadow Grass?',
@@ -629,8 +653,16 @@ export const CRISIS_SCENARIOS_GAME4: EcoCrisisScenario[] = [
     id: 'fertilizer-boost',
     title: 'Spring Rain & Plentiful Grass',
     badge: 'Producer Abundance',
-    story: 'Gentle warm rains and plenty of sunshine cause grass and clovers to grow super lush and tall across the whole meadow!',
+    story: 'Gentle warm rains and plenty of sunshine cause grass and clovers to grow super lush and tall across the whole prairie!',
     shockEvent: 'Grass Producer Surge (+100%)',
+    labels: {
+      producer: 'Prairie Grass',
+      producerEmoji: '🌾',
+      herbivore: 'Prairie Rabbits',
+      herbivoreEmoji: '🐇',
+      predator: 'Prairie Foxes',
+      predatorEmoji: '🦊'
+    },
     initialCounts: { grass: 50, rabbits: 30, foxes: 8 },
     afterCounts: { grass: 100, rabbits: 65, foxes: 16 },
     inquiryQuestion: 'How does an increase in Grass producers affect the Consumers in the food chain?',
@@ -652,5 +684,257 @@ export const CRISIS_SCENARIOS_GAME4: EcoCrisisScenario[] = [
       }
     ],
     ecoTakeaway: 'Energy flows upward! More plant energy at the foundation means more animals can be sustained throughout the chain.'
+  },
+  {
+    id: 'locust-swarm',
+    title: 'Invasive Locust Swarm',
+    badge: 'Resource Competition',
+    story: 'A massive swarm of invasive desert locusts sweeps through the savanna, devouring 80% of grasses and young acacia leaves before native gazelles can graze!',
+    shockEvent: 'Invasive Competitor Consumes Plants (-80%)',
+    labels: {
+      producer: 'Savanna Grass & Acacia',
+      producerEmoji: '🌾',
+      herbivore: 'Native Gazelles',
+      herbivoreEmoji: '🦌',
+      predator: 'Cheetahs',
+      predatorEmoji: '🐆'
+    },
+    initialCounts: { grass: 95, rabbits: 60, foxes: 12 },
+    afterCounts: { grass: 20, rabbits: 18, foxes: 4 },
+    inquiryQuestion: 'What happens to the native gazelles and cheetahs when locusts eat all the plants?',
+    options: [
+      {
+        text: 'Gazelles starve or flee because their food is consumed, causing hungry cheetahs to decline too!',
+        isCorrect: true,
+        explanation: 'Exactly! When an invasive competitor eats the producers, native herbivores starve, which ripples upward to top predators.'
+      },
+      {
+        text: 'Cheetahs will start eating locusts instead of meat and double in population.',
+        isCorrect: false,
+        explanation: 'Incorrect! Large carnivores like cheetahs require large prey and cannot survive on tiny insects.'
+      },
+      {
+        text: 'Gazelles can survive without eating any plants.',
+        isCorrect: false,
+        explanation: 'Incorrect! Gazelles are herbivores and must have plant food energy to survive.'
+      }
+    ],
+    ecoTakeaway: 'Invasive competitors disrupt food chains! If invasive species strip the producers, native herbivores and predators both decline.'
+  },
+  {
+    id: 'coral-bleaching',
+    title: 'Coral Reef Ocean Heatwave',
+    badge: 'Marine Ecosystem Collapse',
+    story: 'Record high sea temperatures cause coral bleaching, destroying 75% of the microscopic algae and living coral polyps that form the foundation of the reef!',
+    shockEvent: 'Reef Producer Bleaching (-75%)',
+    labels: {
+      producer: 'Reef Algae & Corals',
+      producerEmoji: '🪸',
+      herbivore: 'Parrotfish Grazers',
+      herbivoreEmoji: '🐠',
+      predator: 'Reef Sharks',
+      predatorEmoji: '🦈'
+    },
+    initialCounts: { grass: 100, rabbits: 55, foxes: 14 },
+    afterCounts: { grass: 25, rabbits: 16, foxes: 3 },
+    inquiryQuestion: 'How does the loss of reef producers affect herbivorous parrotfish and reef sharks?',
+    options: [
+      {
+        text: 'Parrotfish lose both their algae food and shelter, so they drop sharply, leaving sharks with few prey!',
+        isCorrect: true,
+        explanation: 'Spot on! Marine food chains depend on photosynthetic algae. When coral bleaches, the entire marine pyramid suffers.'
+      },
+      {
+        text: 'Sharks will become herbivores and eat underwater rocks.',
+        isCorrect: false,
+        explanation: 'Incorrect! Sharks are apex carnivores; they cannot digest rocks or seaweed.'
+      },
+      {
+        text: 'Parrotfish will multiply because warm water gives them extra swimming energy.',
+        isCorrect: false,
+        explanation: 'Incorrect! Without their food source, parrotfish face starvation regardless of water temperature.'
+      }
+    ],
+    ecoTakeaway: 'Marine balance! Algae and corals are the producers of the ocean; losing them collapses fish and shark populations alike.'
+  },
+  {
+    id: 'forest-wildfire',
+    title: 'Pine Forest Wildfire & Recovery',
+    badge: 'Natural Disturbance',
+    story: 'A summer lightning strike ignites a wildfire that sweeps through the pine woodland, burning 85% of understory seedlings, shrubs, and pinecones.',
+    shockEvent: 'Fire Consumes Producers (-85%)',
+    labels: {
+      producer: 'Pine Seedlings & Berries',
+      producerEmoji: '🌲',
+      herbivore: 'Tree Squirrels',
+      herbivoreEmoji: '🐿️',
+      predator: 'Woodland Owls',
+      predatorEmoji: '🦉'
+    },
+    initialCounts: { grass: 90, rabbits: 48, foxes: 11 },
+    afterCounts: { grass: 15, rabbits: 12, foxes: 2 },
+    inquiryQuestion: 'What happens to seed-eating squirrels and hunting owls immediately after the fire?',
+    options: [
+      {
+        text: 'Squirrels lose their seed food and tree homes; without squirrels, owls have very few prey to hunt!',
+        isCorrect: true,
+        explanation: 'Correct! Destruction of producer biomass starves primary consumers and forces predators to hunt elsewhere.'
+      },
+      {
+        text: 'Owls will start eating ash and pine needles directly.',
+        isCorrect: false,
+        explanation: 'Incorrect! Owls are birds of prey; they can only digest meat from animals.'
+      },
+      {
+        text: 'Squirrels double in number because smoke hides them from enemies.',
+        isCorrect: false,
+        explanation: 'Incorrect! Without seeds and nuts, squirrels cannot nourish their families.'
+      }
+    ],
+    ecoTakeaway: 'Habitats require producer recovery! When wildfires consume vegetation, animal populations crash until new seedlings sprout.'
+  },
+  {
+    id: 'pesticide-crisis',
+    title: 'Orchard Chemical Spraying Disaster',
+    badge: 'Consumer Food Vanishes',
+    story: 'A fruit grower sprays a synthetic insecticide that wipes out 90% of caterpillars and small insect herbivores living in the orchard trees.',
+    shockEvent: 'Insecticides Eliminate Herbivores (-90%)',
+    labels: {
+      producer: 'Fruit Tree Foliage',
+      producerEmoji: '🍎',
+      herbivore: 'Caterpillar Herbivores',
+      herbivoreEmoji: '🐛',
+      predator: 'Orchard Bluebirds',
+      predatorEmoji: '🐦'
+    },
+    initialCounts: { grass: 80, rabbits: 50, foxes: 10 },
+    afterCounts: { grass: 80, rabbits: 5, foxes: 2 },
+    inquiryQuestion: 'What happens to the insect-eating bluebirds when caterpillars are eliminated?',
+    options: [
+      {
+        text: 'Bluebird parents cannot find food for their chicks, leading to a severe collapse in bird numbers!',
+        isCorrect: true,
+        explanation: 'Brilliant! Secondary consumers depend directly on primary consumers for energy. Removing insects starves the birds!'
+      },
+      {
+        text: 'Bluebirds will grow three times bigger without insects bothering them.',
+        isCorrect: false,
+        explanation: 'Incorrect! Without their food source, animals starve; they do not grow bigger.'
+      },
+      {
+        text: 'Trees will stop making food from the sun.',
+        isCorrect: false,
+        explanation: 'Incorrect! Trees still have sunlight, but the food chain connection to birds is broken.'
+      }
+    ],
+    ecoTakeaway: 'Middle consumers matter! Removing herbivores like insects breaks the energy pathway between plants and predatory birds.'
+  },
+  {
+    id: 'wolf-restoration',
+    title: 'Return of the Wolves (Trophic Cascade)',
+    badge: 'Ecosystem Restoration',
+    story: 'Wildlife biologists reintroduce grey wolves into a valley where elk had been overgrazing willow trees along the riverbank for over 50 years!',
+    shockEvent: 'Apex Predator Reintroduced (+100%)',
+    labels: {
+      producer: 'River Willows & Aspens',
+      producerEmoji: '🌿',
+      herbivore: 'Elk & Deer Herds',
+      herbivoreEmoji: '🦌',
+      predator: 'Grey Wolves',
+      predatorEmoji: '🐺'
+    },
+    initialCounts: { grass: 15, rabbits: 110, foxes: 2 },
+    afterCounts: { grass: 85, rabbits: 45, foxes: 12 },
+    inquiryQuestion: 'How does bringing back apex wolves help riverbank willows and aspen trees flourish?',
+    options: [
+      {
+        text: 'Wolves hunt and keep elk moving, so elk stop overeating riverside willows, allowing forests to regrow!',
+        isCorrect: true,
+        explanation: 'Trophic Cascade! By keeping herbivore numbers and grazing habits in check, apex predators allow plants to recover.'
+      },
+      {
+        text: 'Wolves eat the willow branches directly to trim them neatly.',
+        isCorrect: false,
+        explanation: 'Incorrect! Wolves are carnivores; they hunt deer and elk, not plants.'
+      },
+      {
+        text: 'Wolves wipe out all elk until zero remain on the planet.',
+        isCorrect: false,
+        explanation: 'Incorrect! Natural predators reduce and balance prey herds, but do not drive them extinct.'
+      }
+    ],
+    ecoTakeaway: 'Trophic Cascade! Top predators maintain healthy vegetation by preventing herbivores from over-grazing riverbanks.'
+  },
+  {
+    id: 'kelp-otter-loss',
+    title: 'Kelp Forest & Urchin Barrens',
+    badge: 'Keystone Species Loss',
+    story: 'Along the Pacific coastline, sea otters disappear due to historic fur hunting. Suddenly, nothing is eating the spiny purple sea urchins!',
+    shockEvent: 'Sea Otters Disappear (0%)',
+    labels: {
+      producer: 'Giant Kelp Seaweed',
+      producerEmoji: '🌿',
+      herbivore: 'Purple Sea Urchins',
+      herbivoreEmoji: '🦔',
+      predator: 'Sea Otters',
+      predatorEmoji: '🦦'
+    },
+    initialCounts: { grass: 100, rabbits: 35, foxes: 10 },
+    afterCounts: { grass: 5, rabbits: 130, foxes: 0 },
+    inquiryQuestion: 'What happens to the Giant Kelp underwater forest when sea urchin numbers explode?',
+    options: [
+      {
+        text: 'Urchins multiply unchecked and chew through the kelp holdfasts, turning lush forests into underwater barrens!',
+        isCorrect: true,
+        explanation: 'Spot on! Known as "Urchin Barrens": Without otter predation, urchins consume the entire kelp forest, destroying homes for fish.'
+      },
+      {
+        text: 'Sea urchins plant new kelp gardens to make soft beds.',
+        isCorrect: false,
+        explanation: 'Incorrect! Sea urchins are voracious grazers that consume plant tissue, not plant growers.'
+      },
+      {
+        text: 'Giant kelp grows legs and walks away to deeper water.',
+        isCorrect: false,
+        explanation: 'Incorrect! Kelp is anchored to seafloor rocks and cannot escape herbivores.'
+      }
+    ],
+    ecoTakeaway: 'Keystone species! Sea otters protect marine plant forests by regulating the herbivores that graze upon them.'
+  },
+  {
+    id: 'conservation-corridor',
+    title: 'Protected Wildlife Corridor',
+    badge: 'Connected Equilibrium',
+    story: 'Park rangers plant a lush canopy corridor connecting two isolated rainforest reserves, allowing wild grazers and big cats to roam freely!',
+    shockEvent: 'Habitat Reconnected (+50% Healthy Balance)',
+    labels: {
+      producer: 'Canopy Trees & Fruit',
+      producerEmoji: '🌳',
+      herbivore: 'Tapirs & Monkeys',
+      herbivoreEmoji: '🐒',
+      predator: 'Jaguars',
+      predatorEmoji: '🐆'
+    },
+    initialCounts: { grass: 50, rabbits: 30, foxes: 6 },
+    afterCounts: { grass: 90, rabbits: 60, foxes: 14 },
+    inquiryQuestion: 'Why does reconnecting habitats help producers, herbivores, and predators all thrive together?',
+    options: [
+      {
+        text: 'Animals can roam for food and mates without overgrazing any single zone, maintaining natural balance!',
+        isCorrect: true,
+        explanation: 'Magnificent! Connected landscapes prevent overgrazing, spread plant seeds, and allow predators to maintain healthy prey numbers.'
+      },
+      {
+        text: 'Jaguars stop hunting and live on tree leaves instead.',
+        isCorrect: false,
+        explanation: 'Incorrect! Jaguars remain carnivorous apex predators.'
+      },
+      {
+        text: 'Plants stop needing sunshine because animals visit more often.',
+        isCorrect: false,
+        explanation: 'Incorrect! Plants always require sunlight for photosynthesis.'
+      }
+    ],
+    ecoTakeaway: 'Interdependence & Balance! Protecting the relationships between soil, plants, herbivores, and predators preserves life on Earth.'
   }
 ];

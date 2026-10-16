@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play, RotateCcw, Volume2, ArrowRight, TrendingUp, TrendingDown, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { Play, RotateCcw, Volume2, ArrowRight, ArrowLeft, TrendingUp, TrendingDown, Award, Sparkles, CheckCircle2, ChevronRight } from 'lucide-react';
 import { CRISIS_SCENARIOS_GAME4, EcoCrisisScenario } from '../../data/curriculumData';
 import { useProgress } from '../../context/ProgressContext';
 import { soundManager } from '../../utils/audio';
@@ -7,25 +7,31 @@ import { soundManager } from '../../utils/audio';
 export const GameFourEcoBalance: React.FC<{ onCompleteGame?: () => void }> = ({ onCompleteGame }) => {
   const { recordGameResult } = useProgress();
 
-  const [activeTab, setActiveTab] = useState<'scenarios' | 'sandbox'>('scenarios');
-
-  // Scenario Mode State
+  // 10 Guided Ripple Missions State
   const [scenarioIdx, setScenarioIdx] = useState(0);
   const currentScenario: EcoCrisisScenario = CRISIS_SCENARIOS_GAME4[scenarioIdx];
   const [selectedPrediction, setSelectedPrediction] = useState<number | null>(null);
   const [hasSimulatedShock, setHasSimulatedShock] = useState(false);
-  const [scenarioScore, setScenarioScore] = useState<number[]>([]);
+  const [scenarioScore, setScenarioScore] = useState<Record<number, number>>({});
   const [scenariosDone, setScenariosDone] = useState(false);
 
-  // Sandbox Mode State
-  const [sandboxGrass, setSandboxGrass] = useState(70);
-  const [sandboxRabbits, setSandboxRabbits] = useState(40);
-  const [sandboxFoxes, setSandboxFoxes] = useState(12);
-  const [sandboxHistory, setSandboxHistory] = useState<{ g: number; r: number; f: number }[]>([]);
-  const [sandboxStatus, setSandboxStatus] = useState<string>('Balanced Meadow Ecosystem');
+  // Short labels for each of the 10 Mission Tabs
+  const missionShortTitles = [
+    '1. Drought',
+    '2. Predators',
+    '3. Spring Rain',
+    '4. Locusts',
+    '5. Coral Reef',
+    '6. Wildfire',
+    '7. Orchard',
+    '8. Wolves',
+    '9. Kelp Forest',
+    '10. Corridor',
+  ];
 
   // Handle Scenario Prediction
   const handleSelectPrediction = (optIdx: number) => {
+    if (hasSimulatedShock) return;
     soundManager.playClick();
     setSelectedPrediction(optIdx);
   };
@@ -36,13 +42,31 @@ export const GameFourEcoBalance: React.FC<{ onCompleteGame?: () => void }> = ({ 
     setHasSimulatedShock(true);
 
     const isCorrect = currentScenario.options[selectedPrediction].isCorrect;
+    const newScoreMap = { ...scenarioScore, [scenarioIdx]: isCorrect ? 1 : 0 };
+    setScenarioScore(newScoreMap);
+
     if (isCorrect) {
       soundManager.playCorrect();
-      setScenarioScore((prev) => [...prev, 1]);
     } else {
       soundManager.playIncorrect();
-      setScenarioScore((prev) => [...prev, 0]);
     }
+
+    // Check if all 10 missions have been answered
+    const totalAnswered = Object.keys(newScoreMap).length;
+    if (totalAnswered >= CRISIS_SCENARIOS_GAME4.length) {
+      const correctTotal = Object.values(newScoreMap).reduce((a, b) => a + b, 0);
+      let stars = 1;
+      if (correctTotal >= 8) stars = 3;
+      else if (correctTotal >= 5) stars = 2;
+      recordGameResult('game4', stars, correctTotal * 10);
+    }
+  };
+
+  const handleJumpToMission = (targetIdx: number) => {
+    soundManager.playClick();
+    setScenarioIdx(targetIdx);
+    setSelectedPrediction(null);
+    setHasSimulatedShock(false);
   };
 
   const handleNextScenario = () => {
@@ -52,11 +76,23 @@ export const GameFourEcoBalance: React.FC<{ onCompleteGame?: () => void }> = ({ 
       setSelectedPrediction(null);
       setHasSimulatedShock(false);
     } else {
+      // Reached mission 10 completion
       setScenariosDone(true);
-      const correctTotal = scenarioScore.reduce((a, b) => a + b, 0);
-      const stars = correctTotal >= 2 ? 3 : 2;
-      recordGameResult('game4', stars, correctTotal * 35);
+      const correctTotal = Object.values(scenarioScore).reduce((a, b) => a + b, 0);
+      let stars = 1;
+      if (correctTotal >= 8) stars = 3;
+      else if (correctTotal >= 5) stars = 2;
+      recordGameResult('game4', stars, correctTotal * 10);
       soundManager.playFanfare();
+    }
+  };
+
+  const handlePreviousScenario = () => {
+    if (scenarioIdx > 0) {
+      soundManager.playClick();
+      setScenarioIdx((prev) => prev - 1);
+      setSelectedPrediction(null);
+      setHasSimulatedShock(false);
     }
   };
 
@@ -64,67 +100,12 @@ export const GameFourEcoBalance: React.FC<{ onCompleteGame?: () => void }> = ({ 
     setScenarioIdx(0);
     setSelectedPrediction(null);
     setHasSimulatedShock(false);
-    setScenarioScore([]);
+    setScenarioScore({});
     setScenariosDone(false);
   };
 
-  // Sandbox simulation step
-  const handleSimulateSandboxStep = () => {
-    soundManager.playClick();
-    // Ecosystem mathematical model:
-    // Rabbits eat grass (grass decreases if too many rabbits, grass regenerates)
-    // Foxes eat rabbits (foxes grow if many rabbits, foxes starve if few rabbits)
-    let newGrass = sandboxGrass;
-    let newRabbits = sandboxRabbits;
-    let newFoxes = sandboxFoxes;
-
-    // Grass naturally grows unless overgrazed
-    const grassGrowth = 15;
-    const rabbitConsumption = Math.round(sandboxRabbits * 0.4);
-    newGrass = Math.max(5, Math.min(100, sandboxGrass + grassGrowth - rabbitConsumption));
-
-    // Rabbits depend on grass and fox predation
-    if (sandboxGrass < 20) {
-      // Starvation
-      newRabbits = Math.max(5, Math.round(sandboxRabbits * 0.6));
-    } else {
-      // Reproduction minus fox predation
-      const foxHunt = Math.round(sandboxFoxes * 1.5);
-      newRabbits = Math.max(5, Math.min(120, sandboxRabbits + Math.round(newGrass * 0.25) - foxHunt));
-    }
-
-    // Foxes depend on rabbits
-    if (sandboxRabbits < 20) {
-      newFoxes = Math.max(2, Math.round(sandboxFoxes * 0.6));
-    } else {
-      newFoxes = Math.max(2, Math.min(30, Math.round(sandboxFoxes + (sandboxRabbits > 50 ? 4 : -2))));
-    }
-
-    setSandboxGrass(newGrass);
-    setSandboxRabbits(newRabbits);
-    setSandboxFoxes(newFoxes);
-
-    // Assess status
-    if (newGrass <= 15) {
-      setSandboxStatus('⚠️ Overgrazed! Producers critically depleted.');
-    } else if (newRabbits <= 10) {
-      setSandboxStatus('⚠️ Herbivore collapse! Predators in danger of starving.');
-    } else if (newFoxes <= 3) {
-      setSandboxStatus('⚠️ Low predators! Rabbits may multiply too fast.');
-    } else {
-      setSandboxStatus('🌿 Balanced meadow! Producers and consumers in equilibrium.');
-    }
-
-    setSandboxHistory((prev) => [...prev.slice(-6), { g: newGrass, r: newRabbits, f: newFoxes }]);
-  };
-
-  const handleResetSandbox = () => {
-    setSandboxGrass(70);
-    setSandboxRabbits(40);
-    setSandboxFoxes(12);
-    setSandboxHistory([]);
-    setSandboxStatus('Balanced Meadow Ecosystem');
-  };
+  const answeredCount = Object.keys(scenarioScore).length;
+  const correctCount = Object.values(scenarioScore).reduce((a, b) => a + b, 0);
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -136,72 +117,107 @@ export const GameFourEcoBalance: React.FC<{ onCompleteGame?: () => void }> = ({ 
             <span>·</span>
             <span>Objective 7</span>
             <span>·</span>
-            <span>The Ripple Effect</span>
+            <span>The Food Chain Ripple Effect</span>
           </div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            Eco-Balance: The Food Chain Ripple Effect
+            Eco-Balance: 10 Guided Ripple Missions
           </h1>
           <p className="text-sm text-slate-600 mt-1">
-            Discover how every living thing is connected! Changing one population causes ripples that affect the entire ecosystem.
+            Discover how every living thing is connected! Changing one population causes ripple effects that alter the entire food chain.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={() =>
               soundManager.speak(
-                activeTab === 'scenarios'
-                  ? `Scenario: ${currentScenario.title}. ${currentScenario.story}. What will happen to the food chain?`
-                  : 'Welcome to the Eco Sandbox. Adjust populations and press simulate to watch how organisms balance each other!'
+                `Mission ${scenarioIdx + 1} of 10: ${currentScenario.title}. ${currentScenario.story}. ${currentScenario.inquiryQuestion}`
               )
             }
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
           >
             <Volume2 className="w-3.5 h-3.5 text-slate-600" />
-            <span>Read Aloud</span>
+            <span>Read Mission</span>
           </button>
         </div>
       </div>
 
-      {/* Mode Tabs */}
-      <div className="flex items-center gap-2 p-1 bg-slate-100 rounded-xl max-w-md mx-auto text-xs font-bold">
-        <button
-          onClick={() => setActiveTab('scenarios')}
-          className={`flex-1 py-2 px-3 rounded-lg text-center transition-all ${
-            activeTab === 'scenarios'
-              ? 'bg-white text-emerald-900 shadow-xs'
-              : 'text-slate-600 hover:text-slate-900'
-          }`}
-        >
-          1. Guided Ripple Missions ({scenarioIdx + 1}/{CRISIS_SCENARIOS_GAME4.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('sandbox')}
-          className={`flex-1 py-2 px-3 rounded-lg text-center transition-all ${
-            activeTab === 'sandbox'
-              ? 'bg-white text-emerald-900 shadow-xs'
-              : 'text-slate-600 hover:text-slate-900'
-          }`}
-        >
-          2. Interactive Eco-Sandbox
-        </button>
+      {/* 10 Guided Mission Tabs */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
+        <div className="flex items-center justify-between mb-3 px-1 text-xs">
+          <span className="font-bold text-slate-700 flex items-center gap-1.5">
+            <span>10 Guided Missions:</span>
+            <span className="text-emerald-800 font-semibold">
+              {answeredCount}/10 completed ({correctCount} correct)
+            </span>
+          </span>
+          <span className="text-slate-500 font-medium hidden sm:inline">
+            Click any tab (1 to 10) to jump to that mission
+          </span>
+        </div>
+
+        {/* 10 Tab Buttons */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-10 gap-1.5">
+          {CRISIS_SCENARIOS_GAME4.map((scenario, idx) => {
+            const isCurrent = idx === scenarioIdx && !scenariosDone;
+            const hasScore = scenarioScore[idx] !== undefined;
+            const isCorrect = scenarioScore[idx] === 1;
+
+            return (
+              <button
+                key={scenario.id}
+                onClick={() => {
+                  setScenariosDone(false);
+                  handleJumpToMission(idx);
+                }}
+                className={`py-2 px-2 rounded-xl text-xs font-bold transition-all border text-center flex flex-col items-center justify-center gap-0.5 ${
+                  isCurrent
+                    ? 'bg-slate-900 text-white border-slate-900 shadow-xs ring-2 ring-emerald-400'
+                    : hasScore
+                    ? isCorrect
+                      ? 'bg-emerald-50 text-emerald-900 border-emerald-300 hover:bg-emerald-100'
+                      : 'bg-rose-50 text-rose-900 border-rose-300 hover:bg-rose-100'
+                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                }`}
+                title={`Mission ${idx + 1}: ${scenario.title}`}
+              >
+                <div className="flex items-center gap-1">
+                  <span>Tab {idx + 1}</span>
+                  {hasScore && (
+                    <span className="text-[10px] font-black">
+                      {isCorrect ? '✓' : '✗'}
+                    </span>
+                  )}
+                </div>
+                <span className="text-[10px] font-normal truncate max-w-full opacity-90">
+                  {missionShortTitles[idx]?.split('. ')[1] || `M${idx + 1}`}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* ================= SCENARIOS MODE ================= */}
-      {activeTab === 'scenarios' && !scenariosDone && (
+      {/* ================= ACTIVE MISSION CARD ================= */}
+      {!scenariosDone && (
         <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
           {/* Scenario Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100">
             <div>
-              <span className="text-xs font-bold text-amber-700 uppercase tracking-wide">
-                Mission {scenarioIdx + 1} of {CRISIS_SCENARIOS_GAME4.length}
-              </span>
-              <h2 className="text-xl font-bold text-slate-900 mt-0.5">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-extrabold text-amber-700 uppercase tracking-wide bg-amber-50 px-2.5 py-0.5 rounded-md border border-amber-200">
+                  Mission {scenarioIdx + 1} of 10
+                </span>
+                <span className="text-xs font-semibold text-slate-500">
+                  · {currentScenario.badge}
+                </span>
+              </div>
+              <h2 className="text-xl font-bold text-slate-900 mt-1">
                 {currentScenario.title}
               </h2>
             </div>
             <span className="px-3 py-1 bg-rose-50 text-rose-800 border border-rose-200 text-xs font-semibold rounded-lg self-start sm:self-center">
-              Event: {currentScenario.shockEvent}
+              Shock Event: {currentScenario.shockEvent}
             </span>
           </div>
 
@@ -214,18 +230,24 @@ export const GameFourEcoBalance: React.FC<{ onCompleteGame?: () => void }> = ({ 
 
           {/* Interactive Population Comparison Visually */}
           <div className="border border-slate-200 rounded-xl p-5 bg-gradient-to-r from-emerald-50/30 via-sky-50/20 to-amber-50/30">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-600 mb-4">
-              Population Gauge: Before vs. After the Environmental Shock
-            </h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-600">
+                Ecosystem Population Gauge: Before vs. After Shock
+              </h3>
+              <span className="text-[11px] font-semibold text-slate-500">
+                {hasSimulatedShock ? '⚡ Shock Applied' : 'Normal Equilibrium'}
+              </span>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Grass */}
+              {/* Producers */}
               <div className="bg-white border border-emerald-200 rounded-xl p-3.5 shadow-xs">
                 <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-2">
-                  <span className="flex items-center gap-1.5">
-                    <span className="text-xl">🌾</span> Meadow Grass (Producer)
+                  <span className="flex items-center gap-1.5 truncate">
+                    <span className="text-xl">{currentScenario.labels?.producerEmoji || '🌾'}</span>{' '}
+                    <span className="truncate">{currentScenario.labels?.producer || 'Producers'}</span>
                   </span>
-                  <span className="tabular-nums">
+                  <span className="tabular-nums shrink-0 ml-1">
                     {hasSimulatedShock ? currentScenario.afterCounts.grass : currentScenario.initialCounts.grass}%
                   </span>
                 </div>
@@ -256,13 +278,14 @@ export const GameFourEcoBalance: React.FC<{ onCompleteGame?: () => void }> = ({ 
                 )}
               </div>
 
-              {/* Rabbits */}
+              {/* Herbivores */}
               <div className="bg-white border border-amber-200 rounded-xl p-3.5 shadow-xs">
                 <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-2">
-                  <span className="flex items-center gap-1.5">
-                    <span className="text-xl">🐇</span> Rabbits (Herbivore)
+                  <span className="flex items-center gap-1.5 truncate">
+                    <span className="text-xl">{currentScenario.labels?.herbivoreEmoji || '🐇'}</span>{' '}
+                    <span className="truncate">{currentScenario.labels?.herbivore || 'Herbivores'}</span>
                   </span>
-                  <span className="tabular-nums">
+                  <span className="tabular-nums shrink-0 ml-1">
                     {hasSimulatedShock ? currentScenario.afterCounts.rabbits : currentScenario.initialCounts.rabbits}
                   </span>
                 </div>
@@ -294,13 +317,14 @@ export const GameFourEcoBalance: React.FC<{ onCompleteGame?: () => void }> = ({ 
                 )}
               </div>
 
-              {/* Foxes */}
+              {/* Predators */}
               <div className="bg-white border border-rose-200 rounded-xl p-3.5 shadow-xs">
                 <div className="flex items-center justify-between text-xs font-bold text-slate-800 mb-2">
-                  <span className="flex items-center gap-1.5">
-                    <span className="text-xl">🦊</span> Foxes (Apex Predator)
+                  <span className="flex items-center gap-1.5 truncate">
+                    <span className="text-xl">{currentScenario.labels?.predatorEmoji || '🦊'}</span>{' '}
+                    <span className="truncate">{currentScenario.labels?.predator || 'Predators'}</span>
                   </span>
-                  <span className="tabular-nums">
+                  <span className="tabular-nums shrink-0 ml-1">
                     {hasSimulatedShock ? currentScenario.afterCounts.foxes : currentScenario.initialCounts.foxes}
                   </span>
                 </div>
@@ -356,7 +380,7 @@ export const GameFourEcoBalance: React.FC<{ onCompleteGame?: () => void }> = ({ 
                             : 'bg-rose-100 border-rose-400 text-rose-950 font-bold'
                           : 'bg-slate-900 text-white border-slate-900'
                         : hasSimulatedShock && opt.isCorrect
-                        ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
+                        ? 'bg-emerald-50 border-emerald-300 text-emerald-900 font-semibold'
                         : 'bg-white border-slate-200 hover:border-slate-300 text-slate-800'
                     }`}
                   >
@@ -384,211 +408,105 @@ export const GameFourEcoBalance: React.FC<{ onCompleteGame?: () => void }> = ({ 
               )}
             </div>
 
-            {!hasSimulatedShock ? (
-              <button
-                onClick={handleRunShockSimulation}
-                disabled={selectedPrediction === null}
-                className="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 disabled:bg-slate-300 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-xs flex items-center justify-center gap-2"
-              >
-                <Play className="w-4 h-4 fill-white" />
-                <span>Simulate the Ripple Effect</span>
-              </button>
-            ) : (
-              <button
-                onClick={handleNextScenario}
-                className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm rounded-xl transition-all flex items-center justify-center gap-2"
-              >
-                <span>
-                  {scenarioIdx < CRISIS_SCENARIOS_GAME4.length - 1
-                    ? 'Next Scenario'
-                    : 'View Ecologist Report'}
-                </span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {scenarioIdx > 0 && (
+                <button
+                  onClick={handlePreviousScenario}
+                  className="px-4 py-2.5 border border-slate-300 text-slate-700 font-bold text-xs sm:text-sm rounded-xl hover:bg-slate-50 transition-colors flex items-center gap-1.5"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Previous</span>
+                </button>
+              )}
+
+              {!hasSimulatedShock ? (
+                <button
+                  onClick={handleRunShockSimulation}
+                  disabled={selectedPrediction === null}
+                  className="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 disabled:bg-slate-300 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-xs flex items-center justify-center gap-2"
+                >
+                  <Play className="w-4 h-4 fill-white" />
+                  <span>Simulate the Ripple Effect</span>
+                </button>
+              ) : (
+                <button
+                  onClick={handleNextScenario}
+                  className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm rounded-xl transition-all flex items-center justify-center gap-2"
+                >
+                  <span>
+                    {scenarioIdx < CRISIS_SCENARIOS_GAME4.length - 1
+                      ? 'Next Mission'
+                      : 'View 10-Mission Report'}
+                  </span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
 
-      {/* Completion of Scenarios */}
-      {activeTab === 'scenarios' && scenariosDone && (
+      {/* ================= 10-MISSION COMPLETION REPORT ================= */}
+      {scenariosDone && (
         <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center space-y-6 shadow-xs">
-          <div className="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-3xl">
+          <div className="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-3xl shadow-xs">
             ⚖️
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">Eco-Guardian Badge Unlocked!</h2>
-            <p className="text-sm text-slate-600 max-w-md mx-auto mt-1">
-              You mastered Objective 7! You proved that living things in an ecosystem are deeply interconnected.
+            <h2 className="text-2xl font-bold text-slate-900">
+              Eco-Guardian Badge Unlocked! (10 Missions Completed)
+            </h2>
+            <p className="text-sm text-slate-600 max-w-lg mx-auto mt-1">
+              You completed all 10 Guided Ripple Missions and proved your mastery of Objective 7!
               Producers, herbivores, and predators all rely on one another to stay in balance.
             </p>
           </div>
 
-          <div className="flex items-center justify-center gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto py-2">
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+              <div className="text-xs text-slate-500 font-medium">Missions Mastered</div>
+              <div className="text-2xl font-black text-slate-900">
+                {correctCount} / 10
+              </div>
+            </div>
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <div className="text-xs text-amber-700 font-medium">Stars Awarded</div>
+              <div className="text-2xl font-black text-amber-900">
+                {correctCount >= 8 ? '★★★ (3)' : correctCount >= 5 ? '★★☆ (2)' : '★☆☆ (1)'}
+              </div>
+            </div>
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+              <div className="text-xs text-emerald-700 font-medium">Mastery Badge</div>
+              <div className="text-lg font-black text-emerald-900">Eco Guardian</div>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center gap-3 pt-2 flex-wrap">
             <button
               onClick={handleRestartScenarios}
-              className="px-5 py-2.5 border border-slate-300 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-50"
+              className="px-5 py-2.5 border border-slate-300 text-slate-700 font-bold text-xs sm:text-sm rounded-xl hover:bg-slate-50 transition-colors inline-flex items-center gap-2"
             >
-              Replay Missions
+              <RotateCcw className="w-4 h-4" />
+              <span>Replay 10 Missions</span>
             </button>
             <button
-              onClick={() => setActiveTab('sandbox')}
-              className="px-6 py-2.5 bg-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-emerald-800 transition-colors flex items-center gap-2"
+              onClick={() => {
+                setScenariosDone(false);
+                setScenarioIdx(0);
+              }}
+              className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs sm:text-sm rounded-xl transition-colors inline-flex items-center gap-2"
             >
-              <span>Explore Interactive Sandbox</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>Review Mission Tabs</span>
             </button>
-          </div>
-        </div>
-      )}
-
-      {/* ================= INTERACTIVE ECO-SANDBOX ================= */}
-      {activeTab === 'sandbox' && (
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div>
-              <h2 className="text-xl font-bold text-slate-900">
-                The Living Meadow Simulator
-              </h2>
-              <p className="text-sm text-slate-600">
-                Adjust any population and press <strong>"Simulate 1 Season"</strong> to see how producers, herbivores, and predators react!
-              </p>
-            </div>
-            <button
-              onClick={handleResetSandbox}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 border border-slate-200 hover:bg-slate-50 rounded-lg transition-colors"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset Meadow</span>
-            </button>
-          </div>
-
-          {/* Living Meadow Visual Canvas */}
-          <div className="bg-gradient-to-b from-sky-100/70 via-emerald-50/50 to-emerald-100/60 rounded-2xl p-6 border border-emerald-200 relative overflow-hidden min-h-[220px]">
-            {/* Ecosystem Status Callout */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="text-xs font-bold text-slate-800 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs">
-                {sandboxStatus}
-              </div>
-              <div className="text-[11px] font-semibold text-slate-600 bg-white/80 px-2.5 py-1 rounded-md">
-                Trophic Levels Active
-              </div>
-            </div>
-
-            {/* Organism avatars representing current population density */}
-            <div className="space-y-4">
-              {/* Predators */}
-              <div>
-                <div className="text-[11px] font-bold text-rose-900 mb-1 flex items-center gap-1">
-                  <span>🦊 Predators (Foxes): {sandboxFoxes}</span>
-                </div>
-                <div className="flex flex-wrap gap-2 text-2xl min-h-[32px]">
-                  {Array.from({ length: Math.min(15, Math.ceil(sandboxFoxes / 2)) }).map((_, i) => (
-                    <span key={i} className="animate-bounce" style={{ animationDelay: `${i * 100}ms` }}>
-                      🦊
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Herbivores */}
-              <div>
-                <div className="text-[11px] font-bold text-amber-900 mb-1 flex items-center gap-1">
-                  <span>🐇 Herbivore Consumers (Rabbits): {sandboxRabbits}</span>
-                </div>
-                <div className="flex flex-wrap gap-1.5 text-2xl min-h-[32px]">
-                  {Array.from({ length: Math.min(25, Math.ceil(sandboxRabbits / 4)) }).map((_, i) => (
-                    <span key={i}>🐇</span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Producers */}
-              <div>
-                <div className="text-[11px] font-bold text-emerald-900 mb-1 flex items-center gap-1">
-                  <span>🌾 Producers (Grass & Clover): {sandboxGrass}%</span>
-                </div>
-                <div className="flex flex-wrap gap-1 text-2xl min-h-[32px]">
-                  {Array.from({ length: Math.min(30, Math.ceil(sandboxGrass / 3.5)) }).map((_, i) => (
-                    <span key={i}>🌱</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Interactive Sliders */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-slate-50 p-5 rounded-2xl border border-slate-200">
-            {/* Grass Slider */}
-            <div>
-              <div className="flex justify-between text-xs font-bold text-emerald-900 mb-1.5">
-                <span>🌾 Grass (Producers)</span>
-                <span className="tabular-nums">{sandboxGrass}%</span>
-              </div>
-              <input
-                type="range"
-                min="5"
-                max="100"
-                value={sandboxGrass}
-                onChange={(e) => setSandboxGrass(Number(e.target.value))}
-                className="w-full accent-emerald-600 cursor-pointer"
-              />
-              <span className="text-[10px] text-slate-500 mt-1 block">
-                Food energy for rabbits
-              </span>
-            </div>
-
-            {/* Rabbit Slider */}
-            <div>
-              <div className="flex justify-between text-xs font-bold text-amber-900 mb-1.5">
-                <span>🐇 Rabbits (Consumers)</span>
-                <span className="tabular-nums">{sandboxRabbits}</span>
-              </div>
-              <input
-                type="range"
-                min="5"
-                max="120"
-                value={sandboxRabbits}
-                onChange={(e) => setSandboxRabbits(Number(e.target.value))}
-                className="w-full accent-amber-600 cursor-pointer"
-              />
-              <span className="text-[10px] text-slate-500 mt-1 block">
-                Eats grass; prey for foxes
-              </span>
-            </div>
-
-            {/* Fox Slider */}
-            <div>
-              <div className="flex justify-between text-xs font-bold text-rose-900 mb-1.5">
-                <span>🦊 Foxes (Predators)</span>
-                <span className="tabular-nums">{sandboxFoxes}</span>
-              </div>
-              <input
-                type="range"
-                min="2"
-                max="30"
-                value={sandboxFoxes}
-                onChange={(e) => setSandboxFoxes(Number(e.target.value))}
-                className="w-full accent-rose-600 cursor-pointer"
-              />
-              <span className="text-[10px] text-slate-500 mt-1 block">
-                Keeps rabbit population in balance
-              </span>
-            </div>
-          </div>
-
-          {/* Action Row */}
-          <div className="flex items-center justify-between pt-2">
-            <span className="text-xs text-slate-600">
-              Try setting Grass to 10% or Foxes to 2, then step through seasons!
-            </span>
-            <button
-              onClick={handleSimulateSandboxStep}
-              className="px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-xs flex items-center gap-2"
-            >
-              <Play className="w-4 h-4 fill-white" />
-              <span>Simulate 1 Season</span>
-            </button>
+            {onCompleteGame && (
+              <button
+                onClick={onCompleteGame}
+                className="px-6 py-2.5 bg-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl hover:bg-emerald-800 transition-colors inline-flex items-center gap-2 shadow-xs"
+              >
+                <Award className="w-4 h-4 text-amber-300" />
+                <span>Open Science Passport</span>
+              </button>
+            )}
           </div>
         </div>
       )}

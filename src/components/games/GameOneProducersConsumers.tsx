@@ -126,6 +126,20 @@ export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }
     setSortFeedback(null);
   };
 
+  const handleShuffleRemaining = () => {
+    soundManager.playClick();
+    setUnplacedCards((prev) => shuffleCards(prev));
+  };
+
+  const handleProceedToSorter = () => {
+    soundManager.playClick();
+    setUnplacedCards(shuffleCards(ORGANISMS_GAME1));
+    setPlacedProducers([]);
+    setPlacedConsumers([]);
+    setSortFeedback(null);
+    setStage(2);
+  };
+
   const handleResetGame1 = () => {
     setStage(1);
     setSunlightAdded(false);
@@ -325,10 +339,10 @@ export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }
             </div>
             {isPhotosynthesisComplete && (
               <button
-                onClick={() => setStage(2)}
+                onClick={handleProceedToSorter}
                 className="px-4 py-2 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2 shrink-0"
               >
-                <span>Continue to Sorter</span>
+                <span>Continue to Sorter (Random Deck)</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             )}
@@ -342,8 +356,11 @@ export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }
           <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
               <div>
-                <h2 className="text-xl font-bold text-slate-900">
-                  Lab Mission 2: Sort the Living Things!
+                <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                  <span>Lab Mission 2: Sort the Living Things!</span>
+                  <span className="text-xs font-semibold px-2 py-0.5 bg-emerald-50 text-emerald-800 rounded-md border border-emerald-200">
+                    🎲 Random Order Deck
+                  </span>
                 </h2>
                 <p className="text-sm text-slate-600">
                   Is it a <strong className="text-emerald-700">Producer</strong> (makes own food) or a{' '}
@@ -356,12 +373,12 @@ export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }
                   Remaining to sort: <span className="tabular-nums font-bold text-slate-800">{unplacedCards.length}</span> / 8
                 </div>
                 <button
-                  onClick={handleShuffleAndResetSorter}
-                  title="Shuffle deck into a new random order"
-                  className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 hover:text-slate-900 rounded-lg transition-colors border border-slate-200"
+                  onClick={handleShuffleRemaining}
+                  title="Shuffle remaining deck into a fresh random order"
+                  className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 hover:text-slate-900 rounded-lg transition-colors border border-slate-200"
                 >
                   <Shuffle className="w-3.5 h-3.5 text-slate-600" />
-                  <span>Shuffle</span>
+                  <span>Shuffle Deck</span>
                 </button>
               </div>
             </div>
@@ -369,6 +386,10 @@ export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }
             {/* Current card to sort */}
             {unplacedCards.length > 0 ? (
               <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 max-w-lg mx-auto text-center space-y-4">
+                <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
+                  <span>Current Card ({8 - unplacedCards.length + 1} of 8)</span>
+                  <span className="text-[11px] text-emerald-700 font-medium">Random draw</span>
+                </div>
                 <div className="text-6xl">{unplacedCards[0].emoji}</div>
                 <div>
                   <h3 className="text-lg font-bold text-slate-900">{unplacedCards[0].name}</h3>
@@ -394,6 +415,34 @@ export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }
                     <span className="text-[10px] opacity-80 hidden sm:inline">(Eats Food)</span>
                   </button>
                 </div>
+
+                {/* Shuffled Upcoming Cards Preview */}
+                {unplacedCards.length > 1 && (
+                  <div className="mt-4 pt-3 border-t border-slate-200 text-left">
+                    <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 mb-2">
+                      <span>Upcoming in Random Deck:</span>
+                      <button
+                        onClick={handleShuffleRemaining}
+                        className="text-emerald-700 hover:text-emerald-800 text-[10px] inline-flex items-center gap-1 font-semibold"
+                      >
+                        <Shuffle className="w-3 h-3" /> Re-shuffle
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+                      {unplacedCards.slice(1).map((card, idx) => (
+                        <div
+                          key={card.id}
+                          className="bg-white border border-slate-200 px-2 py-1 rounded-md flex items-center gap-1 text-xs shrink-0 shadow-2xs"
+                        >
+                          <span>{card.emoji}</span>
+                          <span className="text-[11px] text-slate-600 font-medium truncate max-w-[80px]">
+                            {card.name}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center space-y-3">
