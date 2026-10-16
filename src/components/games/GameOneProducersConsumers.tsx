@@ -159,18 +159,21 @@ export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Game Header */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-emerald-50/90 via-teal-50/40 to-white border border-emerald-200/80 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800 mb-1">
+          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800 mb-1.5">
             <span>Primary Science Lab</span>
             <span>·</span>
             <span>Objectives 1, 2 & 3</span>
             <span>·</span>
             <span>Energy & Organisms</span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            Energy Quest: Producers vs Consumers
-          </h1>
+          <div className="inline-block bg-white/95 border border-emerald-200/90 rounded-xl px-3.5 py-1.5 shadow-xs mb-1.5">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+              <span>⚡</span>
+              <span>Energy Quest: Producers vs Consumers</span>
+            </h1>
+          </div>
           <p className="text-sm text-slate-600 mt-1">
             Discover how living things obtain their energy! Plants make food with solar energy, while consumers eat other organisms.
           </p>
@@ -230,9 +233,12 @@ export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }
       {stage === 1 && (
         <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
           <div className="text-center max-w-2xl mx-auto space-y-2">
-            <h2 className="text-xl font-bold text-slate-900">
-              Lab Mission 1: How Does a Producer Make Food?
-            </h2>
+            <div className="inline-block bg-emerald-50 border border-emerald-200/80 px-4 py-1.5 rounded-xl shadow-xs">
+              <h2 className="text-lg sm:text-xl font-bold text-emerald-950 flex items-center justify-center gap-2">
+                <span>🌱</span>
+                <span>Lab Mission 1: How Does a Producer Make Food?</span>
+              </h2>
+            </div>
             <p className="text-sm text-slate-600">
               Producers are living things that can <strong className="text-emerald-700">make their own food</strong>!
               Feed the sunflower its 3 natural ingredients to activate <strong className="text-emerald-700">Photosynthesis</strong>.
@@ -356,12 +362,14 @@ export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }
           <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
               <div>
-                <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                  <span>Lab Mission 2: Sort the Living Things!</span>
-                  <span className="text-xs font-semibold px-2 py-0.5 bg-emerald-50 text-emerald-800 rounded-md border border-emerald-200">
-                    🎲 Random Order Deck
-                  </span>
-                </h2>
+                <div className="inline-block bg-emerald-50 border border-emerald-200/80 px-3.5 py-1.5 rounded-xl shadow-xs mb-1.5">
+                  <h2 className="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2 flex-wrap">
+                    <span>🌾 Lab Mission 2: Sort the Living Things!</span>
+                    <span className="text-xs font-semibold px-2 py-0.5 bg-white text-emerald-800 rounded-md border border-emerald-200 shadow-xs">
+                      🎲 Random Order Deck
+                    </span>
+                  </h2>
+                </div>
                 <p className="text-sm text-slate-600">
                   Is it a <strong className="text-emerald-700">Producer</strong> (makes own food) or a{' '}
                   <strong className="text-amber-700">Consumer</strong> (must eat other living things)?
@@ -553,9 +561,12 @@ export const GameOneProducersConsumers: React.FC<{ onCompleteGame?: () => void }
       {stage === 3 && (
         <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-6">
           <div>
-            <h2 className="text-xl font-bold text-slate-900">
-              Lab Mission 3: What Do Consumers Eat?
-            </h2>
+            <div className="inline-block bg-emerald-50 border border-emerald-200/80 px-3.5 py-1.5 rounded-xl shadow-xs mb-1.5">
+              <h2 className="text-lg sm:text-xl font-bold text-emerald-950 flex items-center gap-2">
+                <span>🍽️</span>
+                <span>Lab Mission 3: What Do Consumers Eat?</span>
+              </h2>
+            </div>
             <p className="text-sm text-slate-600 mt-1">
               Since consumers cannot make their own food, they eat different diets. Match each consumer to their scientific diet group:
             </p>

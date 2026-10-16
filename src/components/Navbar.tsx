@@ -45,6 +45,17 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenP
             Dashboard
           </button>
           <button
+            onClick={() => setActiveTab('curriculum')}
+            className={`px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap flex items-center gap-1.5 ${
+              activeTab === 'curriculum'
+                ? 'bg-emerald-50 text-emerald-800 font-semibold'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+            }`}
+          >
+            <BookOpen className="w-4 h-4" />
+            Objectives
+          </button>
+          <button
             onClick={() => setActiveTab('game1')}
             className={`px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap ${
               activeTab === 'game1'
@@ -83,17 +94,6 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenP
             }`}
           >
             4. Eco-Balance
-          </button>
-          <button
-            onClick={() => setActiveTab('curriculum')}
-            className={`px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'curriculum'
-                ? 'bg-emerald-50 text-emerald-800 font-semibold'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <BookOpen className="w-4 h-4" />
-            Objectives
           </button>
         </nav>
 
@@ -150,6 +150,14 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenP
           Home
         </button>
         <button
+          onClick={() => setActiveTab('curriculum')}
+          className={`px-2 py-1 rounded whitespace-nowrap ${
+            activeTab === 'curriculum' ? 'bg-emerald-600 text-white' : 'hover:text-slate-900'
+          }`}
+        >
+          Objectives
+        </button>
+        <button
           onClick={() => setActiveTab('game1')}
           className={`px-2 py-1 rounded whitespace-nowrap ${
             activeTab === 'game1' ? 'bg-emerald-600 text-white' : 'hover:text-slate-900'
@@ -180,14 +188,6 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenP
           }`}
         >
           G4: Balance
-        </button>
-        <button
-          onClick={() => setActiveTab('curriculum')}
-          className={`px-2 py-1 rounded whitespace-nowrap ${
-            activeTab === 'curriculum' ? 'bg-emerald-600 text-white' : 'hover:text-slate-900'
-          }`}
-        >
-          Goals
         </button>
       </div>
     </header>

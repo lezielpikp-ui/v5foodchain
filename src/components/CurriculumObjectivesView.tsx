@@ -55,16 +55,19 @@ export const CurriculumObjectivesView: React.FC<CurriculumObjectivesViewProps> =
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs">
-        <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800 mb-1">
+      <div className="bg-gradient-to-r from-emerald-50/90 via-teal-50/40 to-white border border-emerald-200/80 rounded-2xl p-6 sm:p-8 shadow-xs">
+        <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800 mb-1.5">
           <BookOpen className="w-4 h-4" />
           <span>Curriculum Mastery Guide</span>
           <span>·</span>
           <span>Primary Science Standards</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
-          7 Primary Science Learning Objectives
-        </h1>
+        <div className="inline-block bg-white/95 border border-emerald-200/90 rounded-xl px-3.5 py-1.5 shadow-xs mb-1.5">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+            <span>📖</span>
+            <span>7 Primary Science Learning Objectives</span>
+          </h1>
+        </div>
         <p className="text-sm text-slate-600 mt-2 max-w-2xl">
           Everything primary students need to understand how organisms obtain energy, how food chains work, and why living things depend on each other.
         </p>
@@ -72,9 +75,12 @@ export const CurriculumObjectivesView: React.FC<CurriculumObjectivesViewProps> =
 
       {/* The 7 Objectives Deep Dive */}
       <div className="space-y-4">
-        <h2 className="text-lg font-bold text-slate-900">
-          Curriculum Standards & Practice Games
-        </h2>
+        <div className="inline-block bg-emerald-50 border border-emerald-200/80 px-3.5 py-1.5 rounded-xl shadow-xs">
+          <h2 className="text-base sm:text-lg font-bold text-emerald-950 flex items-center gap-2">
+            <span>🎯</span>
+            <span>Curriculum Standards & Practice Games</span>
+          </h2>
+        </div>
 
         <div className="grid grid-cols-1 gap-4">
           {LEARNING_OBJECTIVES.map((obj) => (
@@ -132,9 +138,12 @@ export const CurriculumObjectivesView: React.FC<CurriculumObjectivesViewProps> =
 
       {/* Scientific Vocabulary Glossary */}
       <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
-        <h2 className="text-lg font-bold text-slate-900">
-          Young Scientist's Glossary
-        </h2>
+        <div className="inline-block bg-emerald-50 border border-emerald-200/80 px-3.5 py-1.5 rounded-xl shadow-xs">
+          <h2 className="text-base sm:text-lg font-bold text-emerald-950 flex items-center gap-2">
+            <span>📚</span>
+            <span>Young Scientist's Glossary</span>
+          </h2>
+        </div>
         <p className="text-xs text-slate-600">
           Important scientific terms primary students should know for classroom quizzes:
         </p>

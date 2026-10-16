@@ -83,18 +83,21 @@ export const GameTwoPredatorPrey: React.FC<{ onCompleteGame?: () => void }> = ({
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header Banner */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-rose-50/90 via-amber-50/40 to-white border border-rose-200/80 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-rose-800 mb-1">
+          <div className="flex items-center gap-2 text-xs font-semibold text-rose-800 mb-1.5">
             <span>Primary Science Lab</span>
             <span>·</span>
             <span>Objective 4</span>
             <span>·</span>
             <span>Predator vs Prey</span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            Wildlife Detective: Predator or Prey?
-          </h1>
+          <div className="inline-block bg-white/95 border border-rose-200/90 rounded-xl px-3.5 py-1.5 shadow-xs mb-1.5">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+              <span>🦅</span>
+              <span>Wildlife Detective: Predator or Prey?</span>
+            </h1>
+          </div>
           <p className="text-sm text-slate-600 mt-1">
             Investigate nature's hunters and hunted! Discover how predators get food energy, how prey defend themselves, and creatures with both roles.
           </p>
@@ -180,9 +183,12 @@ export const GameTwoPredatorPrey: React.FC<{ onCompleteGame?: () => void }> = ({
 
           {/* Creatures Role Assignment Cards */}
           <div className="space-y-4">
-            <h3 className="text-sm font-bold text-slate-900">
-              Assign Each Animal's Role in this Ecosystem:
-            </h3>
+            <div className="inline-block bg-rose-50 border border-rose-200/80 px-3.5 py-1.5 rounded-xl shadow-xs">
+              <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-2">
+                <span>🔍</span>
+                <span>Assign Each Animal's Role in this Ecosystem:</span>
+              </h3>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {activeCase.creatures.map((creature) => {
@@ -306,7 +312,9 @@ export const GameTwoPredatorPrey: React.FC<{ onCompleteGame?: () => void }> = ({
             🏆
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">Detective Mastery Achieved!</h2>
+            <div className="inline-block bg-rose-50 border border-rose-200/80 px-4 py-1.5 rounded-xl shadow-xs mb-1.5">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Detective Mastery Achieved!</h2>
+            </div>
             <p className="text-sm text-slate-600 max-w-md mx-auto mt-1">
               You cracked all four wildlife cases! You understand the survival balance between predators, prey, and creatures that play both vital roles.
             </p>

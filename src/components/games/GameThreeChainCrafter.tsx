@@ -127,18 +127,21 @@ export const GameThreeChainCrafter: React.FC<{ onCompleteGame?: () => void }> = 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header Banner */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-teal-50/90 via-emerald-50/40 to-white border border-teal-200/80 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800 mb-1">
+          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800 mb-1.5">
             <span>Primary Science Lab</span>
             <span>·</span>
             <span>Objectives 5 & 6</span>
             <span>·</span>
             <span>Constructing Food Chains</span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            Chain Crafter: Build the Food Chain
-          </h1>
+          <div className="inline-block bg-white/95 border border-teal-200/90 rounded-xl px-3.5 py-1.5 shadow-xs mb-1.5">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+              <span>🔗</span>
+              <span>Chain Crafter: Build the Food Chain</span>
+            </h1>
+          </div>
           <p className="text-sm text-slate-600 mt-1">
             Connect the path of energy! Remember: the arrow <span className="font-bold text-emerald-700">→</span> means{' '}
             <em>"is eaten by"</em> and shows where energy flows!
@@ -213,9 +216,12 @@ export const GameThreeChainCrafter: React.FC<{ onCompleteGame?: () => void }> = 
             {/* The Chain Assembly Line */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-slate-900">
-                  Your Assembled Food Chain:
-                </h3>
+                <div className="inline-block bg-teal-50 border border-teal-200/80 px-3 py-1 rounded-lg shadow-xs">
+                  <h3 className="text-xs sm:text-sm font-bold text-teal-950 flex items-center gap-1.5">
+                    <span>🌿</span>
+                    <span>Your Assembled Food Chain:</span>
+                  </h3>
+                </div>
                 <span className="text-xs text-slate-500 font-medium">
                   Slots Filled: <span className="tabular-nums font-bold text-slate-800">{state.placed.length}</span> / {activeChain.nodes.length}
                 </span>
@@ -299,9 +305,12 @@ export const GameThreeChainCrafter: React.FC<{ onCompleteGame?: () => void }> = 
             {/* Unplaced Organism Pool */}
             {!isChainVerified && (
               <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
-                  Organism Pool (Tap to place into next slot):
-                </h4>
+                <div className="inline-block bg-slate-100 border border-slate-200 px-3 py-1 rounded-lg mb-2 shadow-2xs">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                    <span>🐾</span>
+                    <span>Organism Pool (Tap to place into next slot):</span>
+                  </h4>
+                </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {state.pool
@@ -455,7 +464,9 @@ export const GameThreeChainCrafter: React.FC<{ onCompleteGame?: () => void }> = 
             🔗
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">Master Chain Crafter!</h2>
+            <div className="inline-block bg-emerald-50 border border-emerald-200/80 px-4 py-1.5 rounded-xl shadow-xs mb-1.5">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Master Chain Crafter!</h2>
+            </div>
             <p className="text-sm text-slate-600 max-w-md mx-auto mt-1">
               You constructed accurate food chains across garden, marine, savanna, and pond biomes!
               You understand that arrows indicate how solar energy flows through ecosystems.

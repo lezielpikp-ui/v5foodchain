@@ -122,9 +122,12 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({ onSelectGame, onOpen
       <div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
-              4 Science Mastery Missions
-            </h2>
+            <div className="inline-block bg-emerald-50 border border-emerald-200/80 px-3.5 py-1.5 rounded-xl shadow-xs mb-1">
+              <h2 className="text-xl sm:text-2xl font-bold text-emerald-950 tracking-tight flex items-center gap-2">
+                <span>🎮</span>
+                <span>4 Science Mastery Missions</span>
+              </h2>
+            </div>
             <p className="text-sm text-slate-600">
               Complete each game to earn stars, collect badges, and unlock your official Science Certificate!
             </p>
@@ -210,9 +213,12 @@ export const HomeOverview: React.FC<HomeOverviewProps> = ({ onSelectGame, onOpen
       <div className="bg-slate-100/70 border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h3 className="text-lg font-bold text-slate-900">
-              Primary Science Learning Objectives
-            </h3>
+            <div className="inline-block bg-white/90 border border-slate-200 px-3 py-1 rounded-lg shadow-2xs mb-1">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-1.5">
+                <span>🎯</span>
+                <span>Primary Science Learning Objectives</span>
+              </h3>
+            </div>
             <p className="text-xs text-slate-600">
               This interactive suite addresses all 7 core primary objectives on living organisms and ecosystems:
             </p>

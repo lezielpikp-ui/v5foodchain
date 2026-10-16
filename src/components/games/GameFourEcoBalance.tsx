@@ -110,18 +110,21 @@ export const GameFourEcoBalance: React.FC<{ onCompleteGame?: () => void }> = ({ 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header Banner */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-emerald-50/90 via-sky-50/40 to-white border border-emerald-200/80 rounded-2xl p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800 mb-1">
+          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800 mb-1.5">
             <span>Primary Science Lab</span>
             <span>·</span>
             <span>Objective 7</span>
             <span>·</span>
             <span>The Food Chain Ripple Effect</span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            Eco-Balance: 10 Guided Ripple Missions
-          </h1>
+          <div className="inline-block bg-white/95 border border-emerald-200/90 rounded-xl px-3.5 py-1.5 shadow-xs mb-1.5">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+              <span>⚖️</span>
+              <span>Eco-Balance: 10 Guided Ripple Missions</span>
+            </h1>
+          </div>
           <p className="text-sm text-slate-600 mt-1">
             Discover how every living thing is connected! Changing one population causes ripple effects that alter the entire food chain.
           </p>
@@ -212,9 +215,11 @@ export const GameFourEcoBalance: React.FC<{ onCompleteGame?: () => void }> = ({ 
                   · {currentScenario.badge}
                 </span>
               </div>
-              <h2 className="text-xl font-bold text-slate-900 mt-1">
-                {currentScenario.title}
-              </h2>
+              <div className="inline-block bg-emerald-50 border border-emerald-200/80 px-3.5 py-1.5 rounded-xl shadow-xs mt-1.5">
+                <h2 className="text-lg sm:text-xl font-bold text-emerald-950">
+                  {currentScenario.title}
+                </h2>
+              </div>
             </div>
             <span className="px-3 py-1 bg-rose-50 text-rose-800 border border-rose-200 text-xs font-semibold rounded-lg self-start sm:self-center">
               Shock Event: {currentScenario.shockEvent}
@@ -230,10 +235,13 @@ export const GameFourEcoBalance: React.FC<{ onCompleteGame?: () => void }> = ({ 
 
           {/* Interactive Population Comparison Visually */}
           <div className="border border-slate-200 rounded-xl p-5 bg-gradient-to-r from-emerald-50/30 via-sky-50/20 to-amber-50/30">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-600">
-                Ecosystem Population Gauge: Before vs. After Shock
-              </h3>
+            <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+              <div className="inline-block bg-white/90 border border-slate-200 px-3 py-1 rounded-lg shadow-2xs">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                  <span>📊</span>
+                  <span>Ecosystem Population Gauge: Before vs. After Shock</span>
+                </h3>
+              </div>
               <span className="text-[11px] font-semibold text-slate-500">
                 {hasSimulatedShock ? '⚡ Shock Applied' : 'Normal Equilibrium'}
               </span>
@@ -453,9 +461,11 @@ export const GameFourEcoBalance: React.FC<{ onCompleteGame?: () => void }> = ({ 
             ⚖️
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">
-              Eco-Guardian Badge Unlocked! (10 Missions Completed)
-            </h2>
+            <div className="inline-block bg-emerald-50 border border-emerald-200/80 px-4 py-1.5 rounded-xl shadow-xs mb-1.5">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
+                Eco-Guardian Badge Unlocked! (10 Missions Completed)
+              </h2>
+            </div>
             <p className="text-sm text-slate-600 max-w-lg mx-auto mt-1">
               You completed all 10 Guided Ripple Missions and proved your mastery of Objective 7!
               Producers, herbivores, and predators all rely on one another to stay in balance.

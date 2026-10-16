@@ -79,9 +79,11 @@ export const PassportModal: React.FC<PassportModalProps> = ({ isOpen, onClose })
                 🌟
               </div>
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
-                  Young Ecologist Passport
-                </h2>
+                <div className="inline-block bg-amber-50 border border-amber-200/80 px-3 py-0.5 rounded-lg mb-0.5">
+                  <h2 className="text-lg sm:text-xl font-bold text-amber-950">
+                    Young Ecologist Passport
+                  </h2>
+                </div>
                 <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
                   <span>Student Progress Tracker</span>
                   <span>·</span>
